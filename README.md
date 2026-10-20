@@ -10,9 +10,9 @@ It runs in **Termux** today (`python -m codequest`) and packages into an
 
 | | |
 |---|---|
-| **Lessons** | __LESSONS__ bite-sized lessons (Python + C++). Each has runnable examples and most end in a judged mini-challenge |
-| **Problems** | __PROBLEMS__ problems from *beginner* to *expert*, inspired by LeetCode, Project Euler, Codeforces, CSES, HackerRank, AtCoder and Rosalind |
-| **Math & Data** | __MATH__ SymPy/NumPy problems with symbolic and floating-point answer checking |
+| **Lessons** | 62 bite-sized lessons (29 Python + 33 C++). Each has runnable examples and most end in a judged mini-challenge |
+| **Problems** | 150 problems from *beginner* (24) to *expert* (15), 121 of them solvable in both Python and C++,, inspired by LeetCode, Project Euler, Codeforces, CSES, HackerRank, AtCoder and Rosalind |
+| **Math & Data** | 29 SymPy/NumPy problems with symbolic and floating-point answer checking |
 | **Tracking** | Daily coding minutes, attempts (passed and failed), solves, streaks, XP and levels, and 31 badges |
 
 ---
