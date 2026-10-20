@@ -44,12 +44,14 @@ class BuildError(Exception):
     pass
 
 
-def load_modules(subdir, attr, only):
+def load_modules(subdir, attr, only, exclude=()):
     items = []
     for path in sorted((CONTENT / subdir).glob("*.py")):
         if path.name.startswith("_"):
             continue
         if only and not any(o in path.stem for o in only):
+            continue
+        if any(path.stem.startswith(e) for e in exclude):
             continue
         spec = importlib.util.spec_from_file_location(f"cq_content_{subdir}_{path.stem}", path)
         mod = importlib.util.module_from_spec(spec)
@@ -217,6 +219,7 @@ def parallel_build(items, fn, jobs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     ap.add_argument("--only", nargs="*", help="only content files whose name contains this")
+    ap.add_argument("--exclude", nargs="*", default=[], help="skip content files starting with this")
     ap.add_argument("--no-write", action="store_true", help="validate without writing JSON")
     ap.add_argument("--jobs", type=int, default=4)
     args = ap.parse_args()
@@ -227,7 +230,7 @@ def main():
     built = {}
     for kind, subdir, attr, fn in (("problems", "problems", "PROBLEMS", build_problem),
                                    ("lessons", "lessons", "LESSONS", build_lesson)):
-        items = load_modules(subdir, attr, args.only)
+        items = load_modules(subdir, attr, args.only, args.exclude)
         if not items:
             continue
         print(f"Building {len(items)} {kind}")
