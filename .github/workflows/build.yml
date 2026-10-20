@@ -1,0 +1,61 @@
+name: Test & build APK
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang
+          pip install numpy sympy
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate content library (runs every reference solution)
+        run: python tools/build_content.py --no-write --jobs 4
+
+  apk:
+    needs: test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: System packages for python-for-android
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip autoconf automake libtool pkg-config \
+            zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev \
+            build-essential ccache
+      - name: Install Buildozer
+        run: pip install "buildozer==1.5.0" "cython<3.1" setuptools
+      - name: Cache Buildozer toolchain (SDK/NDK/p4a builds)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            .buildozer
+          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: buildozer-${{ runner.os }}-
+      - name: Build debug APK
+        run: yes | buildozer -v android debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codequest-apk
+          path: bin/*.apk
+          if-no-files-found: error
