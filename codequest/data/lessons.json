@@ -1,0 +1,100 @@
+[
+ {
+  "id": "py-hello",
+  "track": "python",
+  "unit": "Getting Started",
+  "title": "Hello, Python",
+  "summary": "Your first program: print() and how CodeQuest runs your code.",
+  "body": "Python runs your file **top to bottom**, one line at a time. The built-in\n`print()` function writes text to the screen (standard output):\n\n```python\nprint(\"Hello, world!\")\nprint(\"2 + 3 =\", 2 + 3)\n```\n\n`print` accepts several values separated by commas and puts a space between\nthem. Text must be wrapped in quotes — `\"double\"` or `'single'`, both work.\n\n**Comments** start with `#` and are ignored by Python. Use them to explain\n*why* your code does something.\n\n> In CodeQuest every program talks to the judge through standard input and\n> standard output, exactly like on competitive-programming sites.",
+  "examples": [
+   {
+    "title": "Printing",
+    "code": "print(\"Hello, world!\")\nprint(\"2 + 3 =\", 2 + 3)\n",
+    "stdin": "",
+    "explain": "",
+    "output": "Hello, world!\n2 + 3 = 5\n"
+   },
+   {
+    "title": "sep and end",
+    "code": "print(\"a\", \"b\", \"c\", sep=\"-\")\nprint(\"no newline\", end=\"!\")\nprint()\n",
+    "stdin": "",
+    "explain": "`sep` changes the separator, `end` changes what is printed at the end.",
+    "output": "a-b-c\nno newline!\n"
+   }
+  ],
+  "challenge": {
+   "prompt": "Print exactly `I am learning Python!` (no input).",
+   "starter": "# print the sentence below\n",
+   "solution": "print(\"I am learning Python!\")\n",
+   "checker": "exact",
+   "time_limit": 2.0,
+   "samples": [
+    {
+     "input": "\n",
+     "output": "I am learning Python!\n"
+    }
+   ],
+   "tests": []
+  },
+  "order": 0,
+  "source": "python_00_start.py",
+  "xp": 15
+ },
+ {
+  "id": "py-input",
+  "track": "python",
+  "unit": "Getting Started",
+  "title": "Reading Input",
+  "summary": "input(), int() and split(): getting data into your program.",
+  "body": "`input()` reads **one line** of text from standard input and returns it as a\nstring (without the trailing newline).\n\n```python\nname = input()\nprint(\"Hi\", name)\n```\n\nInput is always text. To do maths, convert it:\n\n```python\nage = int(input())      # whole numbers\nprice = float(input())  # decimals\n```\n\nSeveral values on one line? `split()` cuts a string at whitespace, and `map`\napplies a function to every piece:\n\n```python\na, b = map(int, input().split())\n```\n\nFor big inputs, read everything at once: `import sys; data = sys.stdin.read().split()`.",
+  "examples": [
+   {
+    "title": "Greeting",
+    "code": "name = input()\nprint(\"Hi\", name)\n",
+    "stdin": "Ada\n",
+    "explain": "",
+    "output": "Hi Ada\n"
+   },
+   {
+    "title": "Two numbers",
+    "code": "a, b = map(int, input().split())\nprint(a * b)\n",
+    "stdin": "6 7\n",
+    "explain": "",
+    "output": "42\n"
+   },
+   {
+    "title": "Read everything",
+    "code": "import sys\nnums = list(map(int, sys.stdin.read().split()))\nprint(len(nums), sum(nums))\n",
+    "stdin": "3\n1 2 3\n",
+    "explain": "Handy when you don't care about line breaks.",
+    "output": "4 9\n"
+   }
+  ],
+  "challenge": {
+   "prompt": "Read a name on the first line and a year on the second. Print `<name> is <age> in 2030`.",
+   "starter": "name = input()\nyear = int(input())\n# print the sentence\n",
+   "solution": "name = input()\nyear = int(input())\nprint(name, \"is\", 2030 - year, \"in 2030\")\n",
+   "checker": "exact",
+   "time_limit": 2.0,
+   "samples": [
+    {
+     "input": "Ada\n1990\n",
+     "output": "Ada is 40 in 2030\n"
+    }
+   ],
+   "tests": [
+    {
+     "input": "Linus\n2001\n",
+     "output": "Linus is 29 in 2030\n"
+    },
+    {
+     "input": "Grace\n2030\n",
+     "output": "Grace is 0 in 2030\n"
+    }
+   ]
+  },
+  "order": 1,
+  "source": "python_00_start.py",
+  "xp": 15
+ }
+]
