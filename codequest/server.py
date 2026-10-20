@@ -480,13 +480,16 @@ def make_server(host="127.0.0.1", port=config.DEFAULT_PORT, db_path=None, verbos
 def serve(host="127.0.0.1", port=config.DEFAULT_PORT, open_browser=False, verbose=False):
     httpd, app = make_server(host, port, verbose=verbose)
     url = f"http://{'127.0.0.1' if host in ('0.0.0.0', '::') else host}:{port}/"
-    h = app.health()
+    cat = app.catalog
     print(f"CodeQuest {__version__} running at {url}")
-    print(f"  problems: {h['counts']['problems']}  lessons: "
-          f"{h['counts']['lessons_python']} Python / {h['counts']['lessons_cpp']} C++")
-    print(f"  python runner: {h['python']['mode']}   C++ compiler: {h['cpp']['compiler'] or 'none'}")
-    print(f"  numpy: {h['libraries']['numpy']}   sympy: {h['libraries']['sympy']}")
+    print(f"  problems: {cat.problem_count()}  lessons: "
+          f"{cat.lesson_count('python')} Python / {cat.lesson_count('cpp')} C++")
+    print(f"  python runner: {'subprocess' if config.python_executable() else 'in-process'}   "
+          f"C++ compiler: {config.cxx_compiler() or 'none'}")
     print(f"  data: {config.user_data_dir()}")
+    # Importing SymPy takes seconds on a phone: warm it up without delaying the UI.
+    threading.Thread(target=lambda: [config.has_module(m) for m in ("numpy", "sympy")],
+                     daemon=True).start()
     if open_browser:
         threading.Thread(target=_open, args=(url,), daemon=True).start()
     try:

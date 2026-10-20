@@ -123,7 +123,17 @@ export function markdown(src, defaultLang = "python") {
     if (/^\|/.test(line)) {
       const rows = [];
       while (i < lines.length && /^\|/.test(lines[i])) rows.push(lines[i++]);
-      const cells = (r) => r.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+      // Split on | but not inside `code` spans (so `a || b` works in a cell).
+      const cells = (r) => {
+        const out = [""];
+        let inCode = false;
+        for (const ch of r.trim().replace(/^\||\|$/g, "")) {
+          if (ch === "`") inCode = !inCode;
+          if (ch === "|" && !inCode) out.push("");
+          else out[out.length - 1] += ch;
+        }
+        return out.map((c) => c.trim());
+      };
       const head = cells(rows[0]);
       const body = rows.slice(/^\|[\s:|-]+\|?$/.test(rows[1] || "") ? 2 : 1);
       out.push(`<table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>` +

@@ -16,7 +16,8 @@ class Catalog:
     def __init__(self, data_dir=config.DATA_DIR):
         self.problems = self._load(data_dir / "problems.json")
         self.lessons = self._load(data_dir / "lessons.json")
-        self.problems.sort(key=lambda p: (DIFF_ORDER.get(p["difficulty"], 9), p.get("order", 0)))
+        self.problems.sort(key=lambda p: (DIFF_ORDER.get(p["difficulty"], 9),
+                                          p.get("source", ""), p.get("order", 0)))
         self._pindex = {p["id"]: p for p in self.problems}
         self._lindex = {l["id"]: l for l in self.lessons}
 
